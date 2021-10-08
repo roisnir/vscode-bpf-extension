@@ -3,30 +3,70 @@
 	"name": "BPF",
 	"patterns": [
 		{
-			"include": "#keywords"
+			"include": "#qualifiers"
 		},
 		{
-			"include": "#strings"
+			"include": "#boolean-operators"
+		},
+		{
+			"include": "#bitwise-operators"
+		},
+		{
+			"include": "#math-operators"
+		},
+		{
+			"include": "#values"
 		}
 	],
-	"repository": {
-		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.bpf",
-				"match": "\\b(if|while|for|return)\\b"
-			}]
-		},
-		"strings": {
-			"name": "string.quoted.double.bpf",
-			"begin": "\"",
-			"end": "\"",
+	"keywords": {
+		"qualifiers": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.bpf",
-					"match": "\\\\."
+					"name": "keyword.control.bpf.qualifiers.type",
+					"match": "host|net|port|portrange|proto"
+				},
+				{
+					"name": "keyword.control.bpf.qualifiers.dir",
+					"match": "src|dst|src and dst|src or dst"
+				},
+				{
+					"name": "keyword.control.bpf.qualifiers.proto",
+					"match": "ether|fddi|tr|wlan|ip|ip6|arp|rarp|decnet|tcp|udp"
+				},
+				{
+					"name": "keyword.control.bpf.qualifiers.special",
+					"match": "gateway|broadcast|less|greater"
 				}
-			]
-		}
+		]
+		},
+		"boolean-operators": {"patterns": [
+			{
+				"name": "operator.bpf.boolean",
+				"match": "not|!|and|&&|or|\\|\\|"
+			},
+			{
+				"name": "operator.bpf.equality",
+				"match": "!=|=|>|>=|<|<="
+			}
+		]},
+		"bitwise-operators": {"patterns": [
+			{
+				"name": "operator.bpf.bitwise",
+				"match": "&|\\||>>|<<"
+			}
+		]},
+		"math-operators": {"patterns": [
+			{
+				"name": "operator.bpf.math",
+				"match": "+|-|\\*"
+			}
+		]},
+		"values": {"patterns": [
+			{
+				"name": "number.bpf.value",
+				"match": "\\d+|0x[a-zA-Z0-9]{2}|0x[a-zA-Z0-9]{4}"
+			}
+		]}
 	},
-	"scopeName": ""
+	"scopeName": "source.bpf"
 }

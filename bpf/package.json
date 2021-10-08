@@ -18,7 +18,7 @@
         }],
         "grammars": [{
             "language": "bpf",
-            "scopeName": "",
+            "scopeName": "source.bpf",
             "path": "./syntaxes/bpf.tmLanguage.json"
         }]
     }

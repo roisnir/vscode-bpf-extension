@@ -1,0 +1,23 @@
+{
+    "$schema": "vscode://schemas/color-theme",
+	"name": "BPFDark+",
+	"include": "./dark_plus.json",
+    "tokenColors": [
+		{
+			"scope": [
+				"keyword.operator.logical"
+			],
+			"settings": {
+				"foreground": "#4EC9B0"
+			}
+		},
+        {
+			"scope": [
+				"constant.bpf.addr"
+			],
+			"settings": {
+				"foreground": "#DCDCAA"
+			}
+		}
+    ]
+}

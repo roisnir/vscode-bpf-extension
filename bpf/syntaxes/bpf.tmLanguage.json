@@ -88,11 +88,11 @@
 		]},
 		"special-values": {"patterns": [
 			{
-				"name": "constant.language.bpf.ip",
+				"name": "constant.bpf.addr.ip",
 				"match": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
 			},
 			{
-				"name": "constant.language.bpf.mac",
+				"name": "constant.bpf.addr.mac",
 				"match": "([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}"
 			}
 		]},

@@ -20,6 +20,13 @@
             "language": "bpf",
             "scopeName": "source.bpf",
             "path": "./syntaxes/bpf.tmLanguage.json"
-        }]
+        }],
+        "themes": [
+            {
+                "label": "bpf",
+                "uiTheme": "vs-dark",
+                "path": "./themes/bpf-color-theme.json"
+            }
+        ]
     }
 }

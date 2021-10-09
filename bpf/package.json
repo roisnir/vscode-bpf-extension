@@ -66,9 +66,9 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "node prepare_syntaxes.js && npm run compile",
         "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
+        "watch": "node prepare_syntaxes.js && tsc -watch -p ./",
         "pretest": "npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js"

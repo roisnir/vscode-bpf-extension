@@ -1,0 +1,15 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "bBPF",
+	"patterns": [
+		{
+			"include": "#test"
+		}
+	],
+	"repository": {
+		"test": {"patterns": [
+			{"match": "test", "name": "keyword.control"}
+		]}
+	},
+	"scopeName": "source.bbpf"
+}

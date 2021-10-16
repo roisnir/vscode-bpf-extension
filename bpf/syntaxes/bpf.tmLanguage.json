@@ -24,6 +24,9 @@
 			"include": "#arithmetic-operators"
 		},
 		{
+			"include": "#slice"
+		},
+		{
 			"include": "#special-values"
 		},
 		{
@@ -35,7 +38,7 @@
 			"patterns": [
 				{
 					"name": "keyword.control.bpf.type",
-					"match": "host|net|port|portrange|proto|protochain"
+					"match": "host|net|portrange|port|proto|protochain"
 				},
 				{
 					"name": "keyword.control.bpf.dir",
@@ -50,7 +53,7 @@
 		"keywords": {"patterns": [
 			{
 				"name": "keyword.control.bpf.length",
-				"match": "len"
+				"match": "length|len"
 			},
 			{
 				"name": "keyword.control.bpf.length",
@@ -87,6 +90,17 @@
 			{
 				"name": "keyword.operator.arithmetic.bpf",
 				"match": "\\+|\\-|\\*|/"
+			}
+		]},
+		"slice": {"patterns": [
+			{
+				"name": "keyword.operator.slice.bpf",
+				"match": "([A-z0-9]+)\\[([^:\\]]*):?([^\\]])?\\]",
+				"captures": {
+					"1": {"name": "keyword.control.bpf.proto"},
+					"2": {"name": "keyword.operator.bpf.slice.expr"},
+					"3": {"name": "keyword.operator.bpf.slice.length"}
+				}
 			}
 		]},
 		"special-values": {"patterns": [

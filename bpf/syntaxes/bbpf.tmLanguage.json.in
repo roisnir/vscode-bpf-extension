@@ -3,12 +3,21 @@
 	"name": "bBPF",
 	"patterns": [
 		{
-			"include": "#test"
+			"include": "#comments"
 		}
 	],
 	"repository": {
-		"test": {"patterns": [
-			{"match": "test", "name": "keyword.control"}
+		"comments": {"patterns": [
+			{
+				"match": "(//) .*$",
+				"name": "comment.line.bpf",
+				"captures": {"1": {"name": "comment.line.double-dash.bpf"}}
+			},
+			{
+				"begin": "/\\*",
+				"end": "\\*/",
+				"name": "comment.block"
+			}
 		]}
 	},
 	"scopeName": "source.bbpf"

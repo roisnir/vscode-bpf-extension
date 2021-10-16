@@ -10,9 +10,12 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onCommand:bpf.helloWorld"
+        "onLanguage:bpf",
+        "onLanguage:bbpf"
     ],
-    "main": "./out/extension.js",
+    "main": 
+    
+    "./out/extension.js",
     "contributes": {
         "languages": [
             {

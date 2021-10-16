@@ -3,6 +3,9 @@
   "name": "bBPF",
   "patterns": [
     {
+      "include": "#comments"
+    },
+    {
       "include": "#invalid"
     },
     {
@@ -24,13 +27,13 @@
       "include": "#arithmetic-operators"
     },
     {
+      "include": "#slice"
+    },
+    {
       "include": "#special-values"
     },
     {
       "include": "#numeric-values"
-    },
-    {
-      "include": "#test"
     }
   ],
   "repository": {
@@ -38,7 +41,7 @@
       "patterns": [
         {
           "name": "keyword.control.bpf.type",
-          "match": "host|net|port|portrange|proto|protochain"
+          "match": "host|net|portrange|port|proto|protochain"
         },
         {
           "name": "keyword.control.bpf.dir",
@@ -54,7 +57,7 @@
       "patterns": [
         {
           "name": "keyword.control.bpf.length",
-          "match": "len"
+          "match": "length|len"
         },
         {
           "name": "keyword.control.bpf.length",
@@ -106,6 +109,25 @@
         }
       ]
     },
+    "slice": {
+      "patterns": [
+        {
+          "name": "keyword.operator.slice.bpf",
+          "match": "([A-z0-9]+)\\[([^:\\]]*):?([^\\]])?\\]",
+          "captures": {
+            "1": {
+              "name": "keyword.control.bpf.proto"
+            },
+            "2": {
+              "name": "keyword.operator.bpf.slice.expr"
+            },
+            "3": {
+              "name": "keyword.operator.bpf.slice.length"
+            }
+          }
+        }
+      ]
+    },
     "special-values": {
       "patterns": [
         {
@@ -142,11 +164,21 @@
         }
       ]
     },
-    "test": {
+    "comments": {
       "patterns": [
         {
-          "match": "test",
-          "name": "keyword.control"
+          "match": "(//) .*$",
+          "name": "comment.line.bpf",
+          "captures": {
+            "1": {
+              "name": "comment.line.double-dash.bpf"
+            }
+          }
+        },
+        {
+          "begin": "/\\*",
+          "end": "\\*/",
+          "name": "comment.block"
         }
       ]
     }

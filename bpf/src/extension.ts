@@ -50,9 +50,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			  return;
 		  }
 		  const diagnosticts = new Array<vscode.Diagnostic>();
-		  for (let lineIndex = 1; lineIndex <= lines.length; lineIndex++) {
-			if (lineIndex > 1) {
-				const line = lines[lineIndex - 1];
+		  const line = lines[2];
 				diagnosticts.push(
 					{
 						"severity": vscode.DiagnosticSeverity.Warning,
@@ -60,13 +58,28 @@ export async function activate(context: vscode.ExtensionContext) {
 						"code": "bpf-invalid-syntax-basic",
 						"source": "",
 						"range": new vscode.Range(
-							new vscode.Position(lineIndex - 1, 0),
-							new vscode.Position(lineIndex, line.length - 1)
+							new vscode.Position(0, 0),
+							new vscode.Position(1, line.length - 1)
 						)
 					}
 				  );
-			}
-		  }
+		//   for (let lineIndex = 1; lineIndex <= lines.length; lineIndex++) {
+		// 	if (lineIndex >= 1) {
+		// 		const line = lines[lineIndex - 1];
+		// 		diagnosticts.push(
+		// 			{
+		// 				"severity": vscode.DiagnosticSeverity.Warning,
+		// 				"message": "BPF syntax doesn't support line breaks.",
+		// 				"code": "bpf-invalid-syntax-basic",
+		// 				"source": "",
+		// 				"range": new vscode.Range(
+		// 					new vscode.Position(lineIndex - 1, 0),
+		// 					new vscode.Position(lineIndex, line.length - 1)
+		// 				)
+		// 			}
+		// 		  );
+		// 	}
+		//   }
 		  diagnosticCollection.set(doc.uri, diagnosticts);
 	};
 

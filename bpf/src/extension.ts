@@ -12,7 +12,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.languages.registerHoverProvider('bpf', bpfHoverProvider),
 		vscode.languages.registerHoverProvider('bbpf', bBpfHoverProvider)
 	);
-
 	// Diagnostincs
 	const diagnosticCollection = vscode.languages.createDiagnosticCollection("bpf");
 	const bpfDiagnosticsHandler = await getBpfDiagnosticsHandler(diagnosticCollection);

@@ -2,8 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import vsctm = require('vscode-textmate');
 import oniguruma = require('vscode-oniguruma');
-import { IRawGrammar, IToken } from 'vscode-textmate';
-import { resolve } from 'path';
+import { IRawGrammar } from 'vscode-textmate';
 
 
 const loadedGrammars: { [scopeName: string]: vsctm.IGrammar } = {};
@@ -21,9 +20,12 @@ const supportedScopesFiles: { [scopeName: string]: fs.PathLike } = {
 const registry = new vsctm.Registry({
     onigLib: vscodeOnigurumaLib,
     loadGrammar: (scopeName: string) => {
+        // return new Promise<IRawGrammar|null>((resolve, reject) => {
         return new Promise<IRawGrammar>((resolve, reject) => {
             if (!(scopeName in supportedScopesFiles)) {
+                // console.error(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
                 reject(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
+                // resolve(null);
             } else {
                 const filePath = supportedScopesFiles[scopeName].toString();
                 fs.readFile(filePath, { encoding: 'utf8' }, (err, data: string) =>
@@ -41,21 +43,20 @@ export async function loadGrammar(scopeName: string): Promise<vsctm.IGrammar> {
     return loadedGrammars[scopeName];
 }
 
-export interface ITokenWithLine {
+export interface ITokenWithLine extends vsctm.IToken{
+    readonly text: string;
     readonly lineNumber: number;
-    startIndex: number;
-    readonly endIndex: number;
-    readonly scopes: string[];
 }
 
 export function* tokenizeCode(code: string, grammar: vsctm.IGrammar): Generator<ITokenWithLine, void, void> {
-    const codeLines = code.split(/\r\n|\n/);
+    const codeLines = code.split(/\r\n|\n/) ?? [code];
     let ruleStack = vsctm.INITIAL;
     for (let i = 0; i < codeLines.length; i++){
         const tokens = grammar.tokenizeLine(codeLines[i], ruleStack);
         for (let token of tokens.tokens){
             yield {
-                lineNumber: i+1,
+                text: codeLines[i].slice(token.startIndex, token.endIndex),
+                lineNumber: i,
                 startIndex: token.startIndex,
                 endIndex: token.endIndex,
                 scopes: token.scopes

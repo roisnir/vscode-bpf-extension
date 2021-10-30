@@ -94,12 +94,28 @@
 		]},
 		"structure": {"patterns": [
 			{
-				"name": "meta.structure.bpf.slice",
-				"match": "([A-z0-9]+)\\[([^:\\]]*):?([^\\]])?\\]",
-				"captures": {
-					"2": {"name": "meta.structure.bpf.slice.expr"},
-					"3": {"name": "meta.structure.bpf.slice.length"}
-				}
+				"name": "meta.structure.bpf.slice.open",
+				"match": "\\["
+			},
+			{
+				"name": "meta.structure.bpf.slice.close",
+				"match": "\\]"
+			},
+			{
+				"name": "meta.structure.bpf.slice.colon",
+				"match": ":"
+			},
+			{
+				"name": "meta.structure.bpf.punctuation.parentheses.open",
+				"match": "\\("
+			},
+			{
+				"name": "meta.structure.bpf.punctuation.parentheses.close",
+				"match": "\\)"
+			},
+			{
+				"name": "meta.structure.bpf.punctuation.space",
+				"match": " "
 			}
 		]},
 		"special-values": {"patterns": [

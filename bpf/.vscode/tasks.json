@@ -6,7 +6,7 @@
 		{
 			"label": "prepareSyntaxes",
 			"type": "shell",
-			"command": "node prepare_syntaxes.js",
+			"command": "node prepare-syntaxes.js",
 		},
 		{
 			"label": "npmWatch",

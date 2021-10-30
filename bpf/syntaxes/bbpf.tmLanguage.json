@@ -27,7 +27,7 @@
       "include": "#arithmetic-operators"
     },
     {
-      "include": "#slice"
+      "include": "#structure"
     },
     {
       "include": "#special-values"
@@ -109,22 +109,24 @@
         }
       ]
     },
-    "slice": {
+    "structure": {
       "patterns": [
         {
-          "name": "keyword.operator.slice.bpf",
+          "name": "meta.structure.bpf.slice",
           "match": "([A-z0-9]+)\\[([^:\\]]*):?([^\\]])?\\]",
           "captures": {
-            "1": {
-              "name": "keyword.control.bpf.proto"
-            },
             "2": {
-              "name": "keyword.operator.bpf.slice.expr"
+              "name": "meta.structure.bpf.slice.expr"
             },
             "3": {
-              "name": "keyword.operator.bpf.slice.length"
+              "name": "meta.structure.bpf.slice.length"
             }
           }
+        },
+        {
+          "name": "meta.structure.bpf.test",
+          "begin": "\\(\\(\\(",
+          "end": "\\)\\)\\)"
         }
       ]
     },

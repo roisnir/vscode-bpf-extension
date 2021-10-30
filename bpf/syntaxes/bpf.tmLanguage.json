@@ -24,7 +24,7 @@
 			"include": "#arithmetic-operators"
 		},
 		{
-			"include": "#slice"
+			"include": "#structure"
 		},
 		{
 			"include": "#special-values"
@@ -92,14 +92,13 @@
 				"match": "\\+|\\-|\\*|/"
 			}
 		]},
-		"slice": {"patterns": [
+		"structure": {"patterns": [
 			{
-				"name": "keyword.operator.slice.bpf",
+				"name": "meta.structure.bpf.slice",
 				"match": "([A-z0-9]+)\\[([^:\\]]*):?([^\\]])?\\]",
 				"captures": {
-					"1": {"name": "keyword.control.bpf.proto"},
-					"2": {"name": "keyword.operator.bpf.slice.expr"},
-					"3": {"name": "keyword.operator.bpf.slice.length"}
+					"2": {"name": "meta.structure.bpf.slice.expr"},
+					"3": {"name": "meta.structure.bpf.slice.length"}
 				}
 			}
 		]},

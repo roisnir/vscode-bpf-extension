@@ -16,7 +16,7 @@ export class BpfActionsProvider implements vscode.CodeActionProvider {
 		let filePath = vscode.window.activeTextEditor?.document.fileName;
 		filePath = filePath!.substr(0, filePath!.lastIndexOf('.')) + ".bbpf";
 		action.command = {
-			command: 'bpf.convertToBbpf',
+			command: 'bpf.convertToBBpf',
 			title: 'Conver To bBPF file',
 			tooltip: `This will create a new file named ${filePath}`,
 			arguments: [filePath]

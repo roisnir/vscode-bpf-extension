@@ -80,8 +80,12 @@
     "logical-operators": {
       "patterns": [
         {
-          "name": "keyword.operator.logical.bpf",
+          "name": "keyword.operator.bpf.logical.binary",
           "match": "not|!|and|&&|or|\\|\\|"
+        },
+        {
+          "name": "keyword.operator.bpf.logical.not",
+          "match": "not|!"
         }
       ]
     },

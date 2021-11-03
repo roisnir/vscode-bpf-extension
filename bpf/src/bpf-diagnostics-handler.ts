@@ -1,5 +1,5 @@
 import { DiagnosticCollection, TextDocument, Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
-import { parseParentheses, ParsingError } from "./parse-parentheses";
+import { parseParentheses, ParsingError } from "./parse-bpf";
 import { tokenizeCode, loadGrammar } from './textmate-grammer';
 
 

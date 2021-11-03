@@ -20,12 +20,12 @@ const supportedScopesFiles: { [scopeName: string]: fs.PathLike } = {
 const registry = new vsctm.Registry({
     onigLib: vscodeOnigurumaLib,
     loadGrammar: (scopeName: string) => {
-        // return new Promise<IRawGrammar|null>((resolve, reject) => {
-        return new Promise<IRawGrammar>((resolve, reject) => {
+        return new Promise<IRawGrammar|null>((resolve, reject) => {
+        // return new Promise<IRawGrammar>((resolve, reject) => {
             if (!(scopeName in supportedScopesFiles)) {
-                // console.error(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
-                reject(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
-                // resolve(null);
+                console.error(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
+                // reject(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
+                resolve(null);
             } else {
                 const filePath = supportedScopesFiles[scopeName].toString();
                 fs.readFile(filePath, { encoding: 'utf8' }, (err, data: string) =>
@@ -52,6 +52,9 @@ export function* tokenizeCode(code: string, grammar: vsctm.IGrammar): Generator<
     const codeLines = code.split(/\r\n|\n/) ?? [code];
     let ruleStack = vsctm.INITIAL;
     for (let i = 0; i < codeLines.length; i++){
+        if (codeLines[i].length === 0){
+            continue;
+        }
         const tokens = grammar.tokenizeLine(codeLines[i], ruleStack);
         for (let token of tokens.tokens){
             yield {

@@ -1,7 +1,9 @@
-import { ITokenWithLine } from "./textmate-grammer";
+import { ITokenWithLine, tokenizeCode } from "./textmate-grammer";
 
 export interface IParenthesizedTokens extends Array<ITokenWithLine|IParenthesizedTokens> {};
 
+
+const last = <T>(a: T[])=>a[a.length-1];
 export class ParsingError implements Error {
     name: string = 'CodeSyntaxError';
     message: string;
@@ -16,7 +18,6 @@ export class ParsingError implements Error {
 };
 
 export function parseParentheses(codeTokens: ITokenWithLine[]): IParenthesizedTokens{
-    const last = <T>(a: T[])=>a[a.length-1];
     const parenthesesStack: IParenthesizedTokens[] = [[]];
     let token;
     for (token of codeTokens) {
@@ -46,4 +47,37 @@ export function parseParentheses(codeTokens: ITokenWithLine[]): IParenthesizedTo
         throw new ParsingError("expected ')' closing parenthessis", token.lineNumber, token.startIndex);
     }
     return parenthesesStack[0];
+}
+
+export class Primitive{
+    tokens: ITokenWithLine[];
+    constructor(tokens: ITokenWithLine[]){
+        this.tokens = tokens;
+    }
+}
+
+
+export function parseExpressions(codeTokens: IParenthesizedTokens){
+    const newCodeTokens = [];
+    
+    let primitiveTokens: ITokenWithLine[] = [];
+    for (const element of codeTokens) {
+        if (element instanceof Array){
+            newCodeTokens.push(parseExpressions(element));
+        } else {
+            const tokenScope = last(element.scopes);
+            if (tokenScope.startsWith('keyword.operator.bpf.logical')){
+                if (primitiveTokens.length > 0){
+                    newCodeTokens.push(new Primitive(primitiveTokens));
+                    primitiveTokens = [];
+                }
+                newCodeTokens.push(element);
+            } else {
+                primitiveTokens.push(element);
+            }
+        }
+    }
+    if (primitiveTokens.length > 0){
+        newCodeTokens.push(new Primitive(primitiveTokens));
+    }
 }

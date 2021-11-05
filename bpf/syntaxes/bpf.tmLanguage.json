@@ -71,10 +71,10 @@
 		"logical-operators": {"patterns": [
 			{
 				"name": "keyword.operator.bpf.logical.binary",
-				"match": "not|!|and|&&|or|\\|\\|"
+				"match": "and|&&|or|\\|\\|"
 			},
 			{
-				"name": "keyword.operator.bpf.logical.not",
+				"name": "keyword.operator.bpf.logical.unary",
 				"match": "not|!"
 			}
 		]},

@@ -35,33 +35,8 @@ export class Primitive{
     }
 }
 
-export function parseExpressions(codeTokens: IParenthesizedTokens): IParenthesizedPrimitive{
-    const newCodeTokens: IParenthesizedPrimitive = [];
-    
-    let primitiveTokens: ITokenWithLine[] = [];
-    for (const element of codeTokens) {
-        if (element instanceof Array){
-            newCodeTokens.push(parseExpressions(element));
-        } else {
-            const tokenScope = last(element.scopes);
-            if (tokenScope.startsWith(LOGICAL_OPERATOR_PREFIX)){
-                if (primitiveTokens.length > 0){
-                    newCodeTokens.push(new Primitive(primitiveTokens));
-                    primitiveTokens = [];
-                }
-                newCodeTokens.push(element);
-            } else {
-                primitiveTokens.push(element);
-            }
-        }
-    }
-    if (primitiveTokens.length > 0){
-        newCodeTokens.push(new Primitive(primitiveTokens));
-    }
-    return newCodeTokens;
-}
 
-export function parseParentheses(codeTokens: ITokenWithLine[]): IParenthesizedPrimitive{
+export function parseBpf(codeTokens: ITokenWithLine[]): IParenthesizedPrimitive{
     const parenthesesStack: IParenthesizedPrimitive[] = [[]];
     let token;
     for (token of codeTokens) {

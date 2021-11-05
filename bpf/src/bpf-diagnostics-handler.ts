@@ -1,5 +1,5 @@
 import { DiagnosticCollection, TextDocument, Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
-import { parseParentheses, ParsingError } from "./parse-bpf";
+import { parseBpf, ParsingError } from "./parse-bpf";
 import { tokenizeCode, loadGrammar } from './textmate-grammer';
 
 
@@ -30,7 +30,7 @@ function checkLineBreaks(code: string): Diagnostic[] {
 				"source": "bpf",
 				"range": new Range(
 					new Position(0, line0.length - 1),
-					new Position(1, line1.length - 1)
+					new Position(1, line1.length)
 				)
 			}
 		);
@@ -59,7 +59,7 @@ function checkCode(code: string, scope: string): Promise<Diagnostic[]> {
 			}
 		}
 		try{
-			parseParentheses(tokens);
+			parseBpf(tokens);
 		}
 		catch (e){
 			if (e instanceof ParsingError){

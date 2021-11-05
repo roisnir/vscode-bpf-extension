@@ -42,6 +42,12 @@ export async function loadGrammar(scopeName: string): Promise<vsctm.IGrammar> {
     }
     return loadedGrammars[scopeName];
 }
+export function tryLoadGrammarSync(scopeName: string): vsctm.IGrammar|null {
+    if (!(scopeName in loadedGrammars)) {
+        return null;
+    }
+    return loadedGrammars[scopeName];
+}
 
 export interface ITokenWithLine extends vsctm.IToken{
     readonly text: string;

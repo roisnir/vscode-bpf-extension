@@ -63,6 +63,10 @@
             {
                 "command": "bpf.convertToBBpf",
                 "title": "Convert To bBPF"
+            },
+            {
+                "command": "bpf.test",
+                "title": "Test TERSDAFADF"
             }
         ]
     },

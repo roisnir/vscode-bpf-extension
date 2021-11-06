@@ -39,7 +39,7 @@ function formatBpf(parsedBpf: IParenthesizedPrimitive): vscode.TextEdit[] {
     return edits;
 }
 
-export const bpfFormatter: vscode.DocumentFormattingEditProvider = {
+export const bpfFormatter = {
     provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
         
         const grammar = tryLoadGrammarSync('source.bpf');

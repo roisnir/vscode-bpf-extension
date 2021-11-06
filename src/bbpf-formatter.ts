@@ -61,16 +61,26 @@ function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): v
             continue;
         }
         const curScope = last(curElement.scopes);
-        if (curScope === BPFScopes.binaryLogicalOperator) {
+        if (curScope === BPFScopes.lineCommentDDash && nextScope === BPFScopes.lineComment){
+            replaceGap(curElement, nextElement, '');
+        } else if (nextScope === BPFScopes.parenthesesClose) {
+            indentationLevel--;
+            replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+        } else if (curScope === BPFScopes.lineComment || curScope === BPFScopes.lineCommentDDash) {
+            replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+        } else if (nextScope === BPFScopes.lineCommentDDash) {
+            replaceGap(curElement, nextElement, '  ');
+        } else if (curScope === BPFScopes.binaryLogicalOperator) {
             replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (curScope === BPFScopes.parenthesesOpen) {
             indentationLevel++;
             replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
-        } else if (nextScope === BPFScopes.parenthesesClose) {
-            indentationLevel--;
-            replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (curScope === BPFScopes.parenthesesClose) {
             replaceGap(curElement, nextElement, ' ');
+        } else if (curScope === BPFScopes.blockCommentStart || curScope === BPFScopes.blockCommentEnd ||
+            nextScope === BPFScopes.blockCommentStart || nextScope === BPFScopes.blockCommentEnd || 
+            (curScope === BPFScopes.blockComment && nextScope === BPFScopes.blockComment)) {
+                replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (
             (curScope.startsWith(BPFScopes.operatorPrefix) && !curScope.startsWith(BPFScopes.logicalOeratorPrefix)) ||
             (nextScope.startsWith(BPFScopes.operatorPrefix) && !nextScope.startsWith(BPFScopes.logicalOeratorPrefix)) ||

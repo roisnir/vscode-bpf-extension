@@ -10,6 +10,11 @@ enum BPFScopes {
     parenthesesOpen = 'meta.structure.bpf.punctuation.parentheses.open',
     parenthesesClose = 'meta.structure.bpf.punctuation.parentheses.close',
     space = 'meta.structure.bpf.punctuation.space',
+    blockCommentStart = "comment.block.start",
+    blockCommentEnd = "comment.block.end",
+    blockComment = "comment.block",
+    lineCommentDDash = "comment.line.double-dash.bpf",
+    lineComment = "comment.line.bpf"
 }
 
 export default BPFScopes;

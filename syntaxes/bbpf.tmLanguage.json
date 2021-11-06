@@ -191,7 +191,17 @@
         {
           "begin": "/\\*",
           "end": "\\*/",
-          "name": "comment.block"
+          "name": "comment.block",
+          "beginCaptures": {
+            "0": {
+              "name": "comment.block.start"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "comment.block.end"
+            }
+          }
         }
       ]
     }

@@ -10,8 +10,8 @@
 		"comments": {"patterns": [
 			{
 				"match": "(//) .*$",
-				"name": "comment.line.bpf",
-				"captures": {"1": {"name": "comment.line.double-dash.bpf"}}
+				"name": "comment.line",
+				"captures": {"1": {"name": "comment.line.double-dash"}}
 			},
 			{
 				"begin": "/\\*",

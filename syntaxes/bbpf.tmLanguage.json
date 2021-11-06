@@ -157,7 +157,7 @@
       "patterns": [
         {
           "name": "constant.numeric.hex.bpf",
-          "match": "0x[a-fA-F0-9]{2}|0x[a-fA-F0-9]{4}"
+          "match": "0x[a-fA-F0-9]{8}|0x[a-fA-F0-9]{4}"
         },
         {
           "name": "constant.numeric.dec.bpf",
@@ -181,10 +181,10 @@
       "patterns": [
         {
           "match": "(//) .*$",
-          "name": "comment.line.bpf",
+          "name": "comment.line",
           "captures": {
             "1": {
-              "name": "comment.line.double-dash.bpf"
+              "name": "comment.line.double-dash"
             }
           }
         },

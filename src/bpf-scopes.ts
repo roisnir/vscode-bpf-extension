@@ -13,8 +13,9 @@ enum BPFScopes {
     blockCommentStart = "comment.block.start",
     blockCommentEnd = "comment.block.end",
     blockComment = "comment.block",
-    lineCommentDDash = "comment.line.double-dash.bpf",
-    lineComment = "comment.line.bpf"
+    lineCommentDDash = "comment.line.double-dash",
+    lineComment = "comment.line",
+    numericHex = 'constant.numeric.hex.bpf'
 }
 
 export default BPFScopes;

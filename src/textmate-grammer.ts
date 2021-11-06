@@ -20,8 +20,8 @@ const supportedScopesFiles: { [scopeName: string]: fs.PathLike } = {
 const registry = new vsctm.Registry({
     onigLib: vscodeOnigurumaLib,
     loadGrammar: (scopeName: string) => {
-        return new Promise<IRawGrammar|null>((resolve, reject) => {
-        // return new Promise<IRawGrammar>((resolve, reject) => {
+        return new Promise<IRawGrammar | null>((resolve, reject) => {
+            // return new Promise<IRawGrammar>((resolve, reject) => {
             if (!(scopeName in supportedScopesFiles)) {
                 console.error(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
                 // reject(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
@@ -42,35 +42,40 @@ export async function loadGrammar(scopeName: string): Promise<vsctm.IGrammar> {
     }
     return loadedGrammars[scopeName];
 }
-export function tryLoadGrammarSync(scopeName: string): vsctm.IGrammar|null {
+export function tryLoadGrammarSync(scopeName: string): vsctm.IGrammar | null {
     if (!(scopeName in loadedGrammars)) {
         return null;
     }
     return loadedGrammars[scopeName];
 }
 
-export interface ITokenWithLine extends vsctm.IToken{
+export interface ITokenWithLine extends vsctm.IToken {
     readonly text: string;
     readonly lineNumber: number;
 }
 
-export function* tokenizeCode(code: string, grammar: vsctm.IGrammar): Generator<ITokenWithLine, void, void> {
+export function* tokenizeCodeLines(code: string, grammar: vsctm.IGrammar): Generator<ITokenWithLine[], void, undefined> {
     const codeLines = code.split(/\r\n|\n/) ?? [code];
     let ruleStack = vsctm.INITIAL;
-    for (let i = 0; i < codeLines.length; i++){
-        if (codeLines[i].length === 0){
+    for (let i = 0; i < codeLines.length; i++) {
+        if (codeLines[i].length === 0) {
             continue;
         }
         const tokens = grammar.tokenizeLine(codeLines[i], ruleStack);
-        for (let token of tokens.tokens){
-            yield {
+        yield tokens.tokens.map<ITokenWithLine>((token) => {
+            return {
                 text: codeLines[i].slice(token.startIndex, token.endIndex),
                 lineNumber: i,
                 startIndex: token.startIndex,
                 endIndex: token.endIndex,
                 scopes: token.scopes
             };
-        }
+        });
         ruleStack = tokens.ruleStack;
+    }
+}
+export function* tokenizeCode(code: string, grammar: vsctm.IGrammar): Generator<ITokenWithLine, void, undefined> {
+    for (const line of tokenizeCodeLines(code, grammar)){
+        yield* line;
     }
 }

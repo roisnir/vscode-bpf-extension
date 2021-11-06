@@ -65,8 +65,8 @@
                 "title": "Convert To bBPF"
             },
             {
-                "command": "bpf.test",
-                "title": "Test TERSDAFADF"
+                "command": "bpf.annotatePrintableBytes",
+                "title": "Annotate Printable Bytes"
             }
         ]
     },

@@ -5,6 +5,7 @@ import { BpfActionsProvider } from './bpf-actions-provider';
 import { getBpfDiagnosticsHandler } from './bpf-diagnostics-handler';
 import { bpfFormatter } from './bpf-formatter';
 import { bBpfFormatter } from './bbpf-formatter';
+import { convertToBBpf, annotatePrintableBytes } from './commands';
 
 
 // Initiate extension's elements and register disposables to `context.subscriptions`
@@ -37,26 +38,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('bpf.convertToBBpf', async (newFilePath?: string) => {
-            if (!vscode.window.activeTextEditor) {
-                return;
-            }
-            if (vscode.window.activeTextEditor.document.languageId !== 'bpf'){
-                vscode.window.showErrorMessage(`Can't Convert ${vscode.window.activeTextEditor.document.languageId} documemt to bBPF`);
-                return;
-            }
-            if (newFilePath === undefined){
-                const filePath = vscode.window.activeTextEditor.document.fileName;
-		        newFilePath = filePath!.substr(0, filePath!.lastIndexOf('.')) + ".bbpf";
-            }
-            const curDoc = vscode.window.activeTextEditor.document;
-            await vscode.commands.executeCommand('editor.action.formatDocument');
-            curDoc.save();
-            const text = "/*\r\nThis is a new bBPF file.\r\nbBPF supports a richer syntax than regular BPF.\r\nIt is reccomended to write a short description of you filter here.\r\n*/\r\n\r\n" + curDoc.getText();
-            fs.writeFileSync(newFilePath, text);
-            await vscode.window.showTextDocument(vscode.Uri.file(newFilePath));
-            await vscode.commands.executeCommand('editor.action.formatDocument');            
-        })
+        vscode.commands.registerCommand('bpf.convertToBBpf', convertToBBpf),
+        vscode.commands.registerCommand('bpf.annotatePrintableBytes', annotatePrintableBytes)
     );
 }
 

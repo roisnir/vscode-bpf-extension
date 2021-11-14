@@ -5,7 +5,7 @@ import { BpfActionsProvider } from './bpf-actions-provider';
 import { getBpfDiagnosticsHandler } from './bpf-diagnostics-handler';
 import { bpfFormatter } from './bpf-formatter';
 import { bBpfFormatter } from './bbpf-formatter';
-import { convertToBBpf, convertToBpf, annotatePrintableBytes } from './commands';
+import { convertToBBpfCommand, convertToBpfCommand, annotatePrintableBytes, minifyBbpf } from './commands';
 
 
 // Initiate extension's elements and register disposables to `context.subscriptions`
@@ -43,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.TaskScope.Workspace,
         'Compile BPF',
         'bpf',
-        new vscode.ShellExecution(`tcpdump -d "${vscode.window.activeTextEditor?.document.getText()}"`)
+        new vscode.ShellExecution('tcpdump -d "$(cat ${file})"')
         );
     // Tasks
     context.subscriptions.push(
@@ -59,8 +59,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('bpf.convertToBBpf', convertToBBpf),
-        vscode.commands.registerCommand('bpf.convertToBpf', convertToBpf),
+        vscode.commands.registerCommand('bpf.convertToBBpf', convertToBBpfCommand),
+        vscode.commands.registerCommand('bpf.convertToBpf', convertToBpfCommand),
         vscode.commands.registerCommand('bpf.annotatePrintableBytes', annotatePrintableBytes),
         vscode.commands.registerCommand('bpf.compileBpf', ()=>{
             vscode.tasks.executeTask(compileBpfTask);

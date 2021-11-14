@@ -5,7 +5,7 @@ import { last } from './utils';
 import BPFScopes from './bpf-scopes';
 
 
-export async function convertToBBpf(newFilePath?: string) {
+export async function convertToBBpfCommand(newFilePath?: string) {
     if (!vscode.window.activeTextEditor) {
         return;
     }
@@ -34,7 +34,7 @@ export async function convertToBBpf(newFilePath?: string) {
     await vscode.commands.executeCommand('editor.action.formatDocument');
 };
 
-export async function convertToBpf(newFilePath?: string) {
+export async function convertToBpfCommand(newFilePath?: string) {
     if (!vscode.window.activeTextEditor) {
         return;
     }
@@ -58,13 +58,17 @@ export async function convertToBpf(newFilePath?: string) {
         }
     }
     curDoc.save();
+    fs.writeFileSync(newFilePath, minifyBbpf(curDoc.getText()));
+    await vscode.window.showTextDocument(vscode.Uri.file(newFilePath));
+    await vscode.commands.executeCommand('editor.action.formatDocument');
+};
+export function minifyBbpf(bbpfString:string): string {
     const grammar = tryLoadGrammarSync('source.bbpf');
     let minifiedBpf = '';
     if (grammar === null) {
-        vscode.window.showErrorMessage("unexpected exception while loading bbpf grammar");
-        return;
+        throw new Error("unexpected exception while loading bbpf grammar");
     }
-    for (const line of tokenizeCodeLines(curDoc.getText(), grammar)) {
+    for (const line of tokenizeCodeLines(bbpfString, grammar)) {
         for (const token of line) {
             if (last(token.scopes).startsWith(BPFScopes.commentPrefix)) {
                 continue;
@@ -73,10 +77,8 @@ export async function convertToBpf(newFilePath?: string) {
         }
         minifiedBpf += ' ';
     }
-    fs.writeFileSync(newFilePath, minifiedBpf);
-    await vscode.window.showTextDocument(vscode.Uri.file(newFilePath));
-    await vscode.commands.executeCommand('editor.action.formatDocument');
-};
+    return minifiedBpf;
+}
 
 export async function annotatePrintableBytes() {
     if (!vscode.window.activeTextEditor) {

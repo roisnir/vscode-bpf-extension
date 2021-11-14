@@ -41,15 +41,19 @@
       "patterns": [
         {
           "name": "keyword.control.bpf.type",
-          "match": "host|net|portrange|port|proto|protochain"
+          "match": "host|net|portrange|port|proto|protochain|mask"
         },
         {
           "name": "keyword.control.bpf.dir",
           "match": "src|dst|src and dst|src or dst"
         },
         {
+          "name": "keyword.control.bpf.proto.ether",
+          "match": "ip|ip6|arp|rarp|atalk|aarp|decnet|iso|stp|ipx|netbe|lat|moprc|mopdl"
+        },
+        {
           "name": "keyword.control.bpf.proto",
-          "match": "ether|fddi|tr|wlan|ip|ip6|arp|rarp|decnet|tcp|udp"
+          "match": "udp|decnet|ip|icmp|tcp|wlan|radio|ppp|link|ip6|fddi|rarp|arp|tr|ether|slip|llc"
         }
       ]
     },
@@ -73,7 +77,11 @@
         },
         {
           "name": "keyword.control.bpf",
-          "match": "gateway|broadcast"
+          "match": "gateway|broadcast|multicast"
+        },
+        {
+          "name": "keyword.control.tcp-flags",
+          "match": "tcp-fin|tcp-syn|tcp-rst|tcp-push|tcp-ack|tcp-urg|tcp-ece|tcp-cwr"
         }
       ]
     },
@@ -145,7 +153,11 @@
       "patterns": [
         {
           "name": "constant.bpf.addr.ip",
-          "match": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+          "match": "\\d{1,3}(\\.\\d{1,3}){1,3}"
+        },
+        {
+          "name": "constant.bpf.addr.ip",
+          "match": "(\\.\\d{1,3}){4}/\\d{1,2}"
         },
         {
           "name": "constant.bpf.addr.mac",

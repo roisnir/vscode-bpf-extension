@@ -5,7 +5,7 @@ import { BpfActionsProvider } from './bpf-actions-provider';
 import { getBpfDiagnosticsHandler } from './bpf-diagnostics-handler';
 import { bpfFormatter } from './bpf-formatter';
 import { bBpfFormatter } from './bbpf-formatter';
-import { convertToBBpf, annotatePrintableBytes } from './commands';
+import { convertToBBpf, convertToBpf, annotatePrintableBytes } from './commands';
 
 
 // Initiate extension's elements and register disposables to `context.subscriptions`
@@ -39,8 +39,52 @@ export async function activate(context: vscode.ExtensionContext) {
     // Commands
     context.subscriptions.push(
         vscode.commands.registerCommand('bpf.convertToBBpf', convertToBBpf),
+        vscode.commands.registerCommand('bpf.convertToBpf', convertToBpf),
         vscode.commands.registerCommand('bpf.annotatePrintableBytes', annotatePrintableBytes)
     );
+    const tasks = [new vscode.Task(
+        {
+            label: "Compile BPF",
+            type: "shell"
+        },
+        vscode.TaskScope.Workspace,
+        'Compile BPF',
+        'bpf',
+        new vscode.ShellExecution(`tcpdump -d "${vscode.window.activeTextEditor?.document.getText()}"`)
+        )];
+    // Tasks
+    context.subscriptions.push(
+        vscode.tasks.registerTaskProvider('shell', {
+            provideTasks(){
+                return tasks;
+            },
+            resolveTask(task){
+                console.log('resolving');
+                return undefined;
+            }
+        })
+    );
+    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory(
+        "bpf",
+        {
+            createDebugAdapterDescriptor(session, exe){
+                return exe;
+            }
+        }
+    )
+    );
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('bpf', {
+		provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined): vscode.ProviderResult<vscode.DebugConfiguration[]> {
+			return [
+				{
+					name: "Dynamic Launch bpf",
+					request: "launch",
+					type: "bpf",
+					program: "${file}"
+				}
+			];
+		}
+	}, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
 }
 
 // this method is called when your extension is deactivated

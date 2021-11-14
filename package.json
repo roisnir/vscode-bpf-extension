@@ -11,7 +11,9 @@
     ],
     "activationEvents": [
         "onLanguage:bpf",
-        "onLanguage:bbpf"
+        "onLanguage:bbpf",
+        "onDebugResolve:mock",
+        "onDebugDynamicConfigurations:mock"
     ],
     "main": "./out/extension.js",
     "contributes": {
@@ -65,35 +67,74 @@
                 "title": "Convert To bBPF"
             },
             {
+                "command": "bpf.convertToBpf",
+                "title": "Minify to BPF"
+            },
+            {
                 "command": "bpf.annotatePrintableBytes",
                 "title": "Annotate Printable Bytes"
             }
+        ],
+        "debuggers": [
+            {
+                "label": "BPF Compiler",
+                "type": "bpf",
+                "languages": ["bpf"],
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "Absolute path to a text file.",
+                                "default": "${file}"
+                            }
+                        }
+                    }
+                },
+                "configurationSnippets": [
+                    {
+                        "label": "BPF: Compile Current",
+                        "description": "A new configuration for compiling BPF",
+                        "body": {
+                            "name": "BPF: Compile Current",
+                            "type": "bpf",
+                            "request": "launch",
+                            "program": "${file}",
+                            "console": "integratedTerminal"
+                        }
+                    }
+                ],
+                "when": "!virtualWorkspace && shellExecutionSupported"
+            }
         ]
     },
-    "scripts": {
-        "vscode:prepublish": "node prepare-syntaxes.js && npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "node prepare-syntaxes.js && tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/glob": "^7.1.4",
-        "@types/mocha": "^9.0.0",
-        "@types/node": "14.x",
-        "@types/vscode": "^1.61.0",
-        "@typescript-eslint/eslint-plugin": "^4.31.1",
-        "@typescript-eslint/parser": "^4.31.1",
-        "@vscode/test-electron": "^1.6.2",
-        "eslint": "^7.32.0",
-        "glob": "^7.1.7",
-        "mocha": "^9.1.1",
-        "typescript": "^4.4.3"
-    },
-    "dependencies": {
-        "parenthesis": "^3.1.7",
-        "vscode-oniguruma": "^1.5.1",
-        "vscode-textmate": "^5.4.0"
-    }
+"scripts": {
+    "vscode:prepublish": "node prepare-syntaxes.js && npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "node prepare-syntaxes.js && tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+},
+"devDependencies": {
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.61.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "@vscode/test-electron": "^1.6.2",
+    "eslint": "^7.32.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.1",
+    "typescript": "^4.4.3"
+},
+"dependencies": {
+    "parenthesis": "^3.1.7",
+    "vscode-oniguruma": "^1.5.1",
+    "vscode-textmate": "^5.4.0"
+}
 }

@@ -2,12 +2,31 @@
     "name": "bpf",
     "displayName": "BPF",
     "description": "BPF support for VS Code",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/roisnir/vscode-bpf-extension"
+    },
+    "bugs": {
+        "url": "https://github.com/roisnir/vscode-bpf-extension/issues",
+        "email": "roisnir1@gmail.com"
+    },
+    "author": {
+        "name": "Roi Snir",
+        "url": "https://github.com/roisnir",
+        "email": "roisnir1@gmail.com"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/roisnir/vscode-bpf-extension",
     "version": "0.0.1",
+    "keywords": ["bpf", "packet", "pcap", "filter"],
     "engines": {
         "vscode": "^1.59.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Linters",
+        "Formatters",
+        "Other"
     ],
     "activationEvents": [
         "onLanguage:bpf",

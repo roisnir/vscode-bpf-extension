@@ -8,6 +8,6 @@ A Visual Studio Code extension with support for the Berkeley Packet Filter Pytho
 
 ## Release Notes
 
-### 1.0.0
+### 0.0.1
 
 Initial release of vscode-bpf-extension!

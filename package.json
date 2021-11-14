@@ -73,41 +73,10 @@
             {
                 "command": "bpf.annotatePrintableBytes",
                 "title": "Annotate Printable Bytes"
-            }
-        ],
-        "debuggers": [
+            },
             {
-                "label": "BPF Compiler",
-                "type": "bpf",
-                "languages": ["bpf"],
-                "configurationAttributes": {
-                    "launch": {
-                        "required": [
-                            "program"
-                        ],
-                        "properties": {
-                            "program": {
-                                "type": "string",
-                                "description": "Absolute path to a text file.",
-                                "default": "${file}"
-                            }
-                        }
-                    }
-                },
-                "configurationSnippets": [
-                    {
-                        "label": "BPF: Compile Current",
-                        "description": "A new configuration for compiling BPF",
-                        "body": {
-                            "name": "BPF: Compile Current",
-                            "type": "bpf",
-                            "request": "launch",
-                            "program": "${file}",
-                            "console": "integratedTerminal"
-                        }
-                    }
-                ],
-                "when": "!virtualWorkspace && shellExecutionSupported"
+                "command": "bpf.compileBpf",
+                "title": "Compile BPF"
             }
         ]
     },

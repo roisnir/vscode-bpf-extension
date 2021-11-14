@@ -17,6 +17,14 @@ export async function convertToBBpf(newFilePath?: string) {
         const filePath = vscode.window.activeTextEditor.document.fileName;
         newFilePath = filePath!.substr(0, filePath!.lastIndexOf('.')) + ".bbpf";
     }
+    if (fs.existsSync(newFilePath)){
+        if (await vscode.window.showWarningMessage(
+            `a file in path ${newFilePath} already exists. override?`,
+            'yes', 'no'
+        ) === 'no'){
+            return;
+        }
+    }
     const curDoc = vscode.window.activeTextEditor.document;
     await vscode.commands.executeCommand('editor.action.formatDocument');
     curDoc.save();
@@ -39,6 +47,16 @@ export async function convertToBpf(newFilePath?: string) {
         newFilePath = filePath!.substr(0, filePath!.lastIndexOf('.')) + ".bpf";
     }
     const curDoc = vscode.window.activeTextEditor.document;
+    curDoc.save();
+    if (fs.existsSync(newFilePath) &&
+    fs.statSync(curDoc.uri.fsPath).mtimeMs < fs.statSync(newFilePath).mtimeMs){
+        if (await vscode.window.showWarningMessage(
+            `${newFilePath} has changed later than ${curDoc.uri.fsPath}. override?`,
+            'yes', 'no'
+        ) === 'no'){
+            return;
+        }
+    }
     curDoc.save();
     const grammar = tryLoadGrammarSync('source.bbpf');
     let minifiedBpf = '';

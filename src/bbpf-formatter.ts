@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import { Range, Position } from 'vscode';
 import { last } from "./utils";
 import { IParenthesizedPrimitive, parseBpf, ParsingError, Primitive } from './parse-bpf';
-import { tryLoadGrammarSync, tokenizeCode, ITokenWithLine } from './textmate-grammer';
+import { tryLoadGrammarSync, tokenizeCode, ITokenWithLine } from './textmate-grammar';
 import BPFScopes from './bpf-scopes';
 
-class TextEditCollenction extends Array<vscode.TextEdit> {
+class TextEditCollection extends Array<vscode.TextEdit> {
     private validateRange(range: Range) {
         return range.start.line < range.end.line ||
             (range.start.line === range.end.line && range.start.character < range.end.character);
@@ -44,9 +44,9 @@ class TextEditCollenction extends Array<vscode.TextEdit> {
 
 
 function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): vscode.TextEdit[] {
-    const edits: TextEditCollenction = new TextEditCollenction();
+    const edits: TextEditCollection = new TextEditCollection();
     let curElement: undefined | ITokenWithLine = undefined;
-
+    let allowLineBreaks = true;
     for (const nextElement of tokens) {
         const nextScope = last(nextElement.scopes);
         if (nextScope === BPFScopes.space) {
@@ -64,83 +64,46 @@ function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): v
         if (curScope === BPFScopes.lineCommentDDash && nextScope === BPFScopes.lineComment){
             replaceGap(curElement, nextElement, '');
         } else if (nextScope === BPFScopes.parenthesesClose) {
-            indentationLevel--;
-            replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+            if (allowLineBreaks) {
+                indentationLevel--;
+                replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+            } else {
+                replaceGap(curElement, nextElement, '');
+            }
         } else if (curScope === BPFScopes.lineComment || curScope === BPFScopes.lineCommentDDash) {
             replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (nextScope === BPFScopes.lineCommentDDash) {
             replaceGap(curElement, nextElement, '  ');
         } else if (curScope === BPFScopes.binaryLogicalOperator) {
+            allowLineBreaks = true;
             replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (curScope === BPFScopes.parenthesesOpen) {
-            indentationLevel++;
-            replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+            if (allowLineBreaks) {
+                indentationLevel++;
+                replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+            } else {
+                replaceGap(curElement, nextElement, '');
+            }
         } else if (curScope === BPFScopes.parenthesesClose) {
             replaceGap(curElement, nextElement, ' ');
         } else if (curScope === BPFScopes.blockCommentStart || curScope === BPFScopes.blockCommentEnd ||
             nextScope === BPFScopes.blockCommentStart || nextScope === BPFScopes.blockCommentEnd || 
             (curScope === BPFScopes.blockComment && nextScope === BPFScopes.blockComment)) {
                 replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
-        } else if (
-            (curScope.startsWith(BPFScopes.operatorPrefix) && !curScope.startsWith(BPFScopes.logicalOeratorPrefix)) ||
-            (nextScope.startsWith(BPFScopes.operatorPrefix) && !nextScope.startsWith(BPFScopes.logicalOeratorPrefix)) ||
-            curScope.startsWith(BPFScopes.slicePrefix) ||
-            nextScope.startsWith(BPFScopes.slicePrefix)
-
-        ) {
-            replaceGap(curElement, nextElement, '');
         } else {
+            if (
+                (curScope.startsWith(BPFScopes.operatorPrefix) && !curScope.startsWith(BPFScopes.logicalOperatorPrefix)) ||
+                (nextScope.startsWith(BPFScopes.operatorPrefix) && !nextScope.startsWith(BPFScopes.logicalOperatorPrefix)) ||
+                curScope.startsWith(BPFScopes.slicePrefix) ||
+                nextScope.startsWith(BPFScopes.slicePrefix)
+    
+            ) {
+                allowLineBreaks = false;
+            }
             replaceGap(curElement, nextElement, ' ');
         }
         curElement = nextElement;
     }
-
-    // for (let i = 0; i < tokens.length; i++) {
-    //     if (i > 0){
-    //         previousElement = tokens[i - 1];
-    //     }
-    //     const element = tokens[i];
-    //     if (previousElement === undefined){
-    //         const range = new vscode.Range(
-    //             0, 0,
-    //             element.lineNumber, element.startIndex);
-    //         edits.push(vscode.TextEdit.delete(range));
-    //     }
-    //     switch (last(token.scopes)) {
-    //         case 'meta.structure.bpf.punctuation.space':
-    //             break;
-    //         case 'meta.structure.bpf.punctuation.parentheses.open':
-    //             let curParentheses: IParenthesizedPrimitive = [];
-    //             curGroup.push(curParentheses);
-    //             parenthesesStack.push(curParentheses);
-    //             break;
-    //         case 'meta.structure.bpf.punctuation.parentheses.close':
-    //             if (parenthesesStack.length < 2){
-    //                 throw new ParsingError('redundant closing parenthessis', token.lineNumber, token.startIndex);
-    //             }
-    //             parenthesesStack.pop();
-    //             break;
-    //         case UNARY_LOGICAL_OPERATOR:
-    //         case BINARY_LOGICAL_OPERATOR:
-    //             curGroup.push(token);
-    //             break;
-    //         default:
-    //             if (!(curGroup.length > 0 && last(curGroup) instanceof Primitive)){
-    //                 curGroup.push(new Primitive([]));
-    //             }
-    //             const curPrimitive = last(curGroup);
-    //             if (curPrimitive instanceof Primitive){
-    //                 curPrimitive.push(token);
-    //             } else {
-    //                 throw new AssertionError({
-    //                 message: "unexpected type",
-    //                 actual: curPrimitive,
-    //                 expected: Primitive
-    //                 });
-    //             }
-    //             break;
-    //     }
-    // }
     return edits;
 
     function replaceGap(curElement: ITokenWithLine, nextElement: ITokenWithLine, replacement: string | null) {

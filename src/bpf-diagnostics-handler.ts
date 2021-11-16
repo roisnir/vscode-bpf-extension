@@ -1,6 +1,6 @@
 import { DiagnosticCollection, TextDocument, Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
 import { parseBpf, ParsingError } from "./parse-bpf";
-import { tokenizeCode, loadGrammar } from './textmate-grammer';
+import { tokenizeCode, loadGrammar } from './textmate-grammar';
 
 
 export async function getBpfDiagnosticsHandler(diagnosticCollection: DiagnosticCollection) {

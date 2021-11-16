@@ -1,6 +1,6 @@
 import { AssertionError } from "assert";
 import { last } from "./utils";
-import { ITokenWithLine, tokenizeCode } from "./textmate-grammer";
+import { ITokenWithLine, tokenizeCode } from "./textmate-grammar";
 import BPFScopes from "./bpf-scopes";
 export interface IParenthesizedTokens extends Array<ITokenWithLine|IParenthesizedTokens> {};
 export interface IParenthesizedPrimitive extends Array<ITokenWithLine|Primitive|IParenthesizedPrimitive> {};

@@ -1,5 +1,5 @@
 enum BPFScopes {
-    logicalOeratorPrefix = 'keyword.operator.bpf.logical',
+    logicalOperatorPrefix = 'keyword.operator.bpf.logical',
     slicePrefix = 'meta.structure.bpf.slice',
     operatorPrefix = 'keyword.operator',
     sliceOpen = 'meta.structure.bpf.slice',

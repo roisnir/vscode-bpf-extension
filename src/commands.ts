@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import fs = require('fs');
-import { tokenizeCode, tokenizeCodeLines, tryLoadGrammarSync } from './textmate-grammer';
+import { tokenizeCode, tokenizeCodeLines, tryLoadGrammarSync } from './textmate-grammar';
 import { last } from './utils';
 import BPFScopes from './bpf-scopes';
 

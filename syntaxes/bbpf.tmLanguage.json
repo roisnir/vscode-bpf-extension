@@ -41,7 +41,7 @@
       "patterns": [
         {
           "name": "keyword.control.bpf.type",
-          "match": "host|net|portrange|port|proto|protochain|mask"
+          "match": "host|net|portrange|port|proto|protochain|mask|lan"
         },
         {
           "name": "keyword.control.bpf.dir",
@@ -53,7 +53,7 @@
         },
         {
           "name": "keyword.control.bpf.proto",
-          "match": "udp|decnet|ip|icmp|tcp|wlan|radio|ppp|link|ip6|fddi|rarp|arp|tr|ether|slip|llc"
+          "match": "udp|decnet|ip|icmp|tcp|wlan|radio|ppp|link|ip6|fddi|rarp|arp|tr|ether|slip|llc|vlan|sctp"
         }
       ]
     },
@@ -169,7 +169,7 @@
       "patterns": [
         {
           "name": "constant.numeric.hex.bpf",
-          "match": "0x[a-fA-F0-9]{8}|0x[a-fA-F0-9]{4}"
+          "match": "0x[a-fA-F0-9]{8}|0x[a-fA-F0-9]{4}|0x[a-fA-F0-9]{2}"
         },
         {
           "name": "constant.numeric.dec.bpf",

@@ -46,7 +46,7 @@ class TextEditCollection extends Array<vscode.TextEdit> {
 function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): vscode.TextEdit[] {
     const edits: TextEditCollection = new TextEditCollection();
     let curElement: undefined | ITokenWithLine = undefined;
-    let allowLineBreaks = true;
+    let allowLineBreaksStack = 0;
     for (const nextElement of tokens) {
         const nextScope = last(nextElement.scopes);
         if (nextScope === BPFScopes.space) {
@@ -61,10 +61,16 @@ function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): v
             continue;
         }
         const curScope = last(curElement.scopes);
+        if (curScope === BPFScopes.sliceClose){
+            allowLineBreaksStack++;
+        }
+        if (nextScope === BPFScopes.sliceOpen){
+            allowLineBreaksStack--;
+        }
         if (curScope === BPFScopes.lineCommentDDash && nextScope === BPFScopes.lineComment){
             replaceGap(curElement, nextElement, '');
         } else if (nextScope === BPFScopes.parenthesesClose) {
-            if (allowLineBreaks) {
+            if (allowLineBreaksStack === 0) {
                 indentationLevel--;
                 replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
             } else {
@@ -75,10 +81,9 @@ function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): v
         } else if (nextScope === BPFScopes.lineCommentDDash) {
             replaceGap(curElement, nextElement, '  ');
         } else if (curScope === BPFScopes.binaryLogicalOperator) {
-            allowLineBreaks = true;
             replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
         } else if (curScope === BPFScopes.parenthesesOpen) {
-            if (allowLineBreaks) {
+            if (allowLineBreaksStack === 0) {
                 indentationLevel++;
                 replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
             } else {
@@ -90,16 +95,12 @@ function getBBpfEdits(tokens: ITokenWithLine[], indentationLevel: number = 0): v
             nextScope === BPFScopes.blockCommentStart || nextScope === BPFScopes.blockCommentEnd || 
             (curScope === BPFScopes.blockComment && nextScope === BPFScopes.blockComment)) {
                 replaceGap(curElement, nextElement, '\r\n' + '  '.repeat(indentationLevel));
+        } else if (
+            curScope.startsWith(BPFScopes.slicePrefix) ||
+            nextScope.startsWith(BPFScopes.slicePrefix)
+        ) {
+            replaceGap(curElement, nextElement, '');
         } else {
-            if (
-                (curScope.startsWith(BPFScopes.operatorPrefix) && !curScope.startsWith(BPFScopes.logicalOperatorPrefix)) ||
-                (nextScope.startsWith(BPFScopes.operatorPrefix) && !nextScope.startsWith(BPFScopes.logicalOperatorPrefix)) ||
-                curScope.startsWith(BPFScopes.slicePrefix) ||
-                nextScope.startsWith(BPFScopes.slicePrefix)
-    
-            ) {
-                allowLineBreaks = false;
-            }
             replaceGap(curElement, nextElement, ' ');
         }
         curElement = nextElement;

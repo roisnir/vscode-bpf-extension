@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import fs = require('fs');
-import { tokenizeCode, tokenizeCodeLines, tryLoadGrammarSync } from './textmate-grammer';
+import { tokenizeCode, tokenizeCodeLines, tryLoadGrammarSync } from './textmate-grammar';
 import { last } from './utils';
 import BPFScopes from './bpf-scopes';
 
@@ -108,12 +108,16 @@ export async function annotatePrintableBytes() {
                 );
             }
             for (const value of hexValues) {
-                const valueStr = Buffer.from(value.text.substr(2), 'hex').toString();
-                if (/[\x00-\x1F]/.test(valueStr)) {
+                const valueStr = Buffer.from(value.text.substring(2), 'hex').toString();
+                if (/[^\x0A\x0D\x20-\x7E]/.test(valueStr)) {
+                    continue;
+                }
+                const ascii = valueStr.replace('\r', '\\r').replace('\n', '\\n');
+                if (last(lastToken.scopes).startsWith(BPFScopes.lineComment) && lastToken.text.includes(ascii)){
                     continue;
                 }
                 editor.insert(
-                    new vscode.Position(lastToken.lineNumber, lastToken.endIndex), `${value.text}: '${valueStr}' `
+                    new vscode.Position(lastToken.lineNumber, lastToken.endIndex), `${value.text}: '${ascii}' `
                 );
             }
         }

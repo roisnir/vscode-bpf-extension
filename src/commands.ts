@@ -122,7 +122,7 @@ export async function annotatePrintableBytes() {
                 );
             }
             for (const value of hexValues) {
-                const valueStr = Buffer.from(value.text.substr(2), 'hex').toString();
+                const valueStr = Buffer.from(value.text.substring(2), 'hex').toString();
                 if (/[\x00-\x1F]/.test(valueStr)) {
                     continue;
                 }

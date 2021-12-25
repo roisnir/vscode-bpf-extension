@@ -9,10 +9,10 @@
       "include": "#invalid"
     },
     {
-      "include": "#qualifiers"
+      "include": "#keywords"
     },
     {
-      "include": "#keywords"
+      "include": "#qualifiers"
     },
     {
       "include": "#logical-operators"
@@ -82,6 +82,10 @@
         {
           "name": "keyword.control.tcp-flags",
           "match": "tcp-fin|tcp-syn|tcp-rst|tcp-push|tcp-ack|tcp-urg|tcp-ece|tcp-cwr"
+        },
+        {
+          "name": "keyword.control.icmp-types",
+          "match": "icmp-echoreply|icmp-unreach|icmp-sourcequench|icmp-redirect|icmp-echo|icmp-routeradvert|icmp-routersolicit|icmp-timxceed|icmp-paramprob|icmp-tstamp|icmp-tstampreply|icmp-ireq|icmp-ireqreply|icmp-maskreq|icmp-maskreply"
         }
       ]
     },

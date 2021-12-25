@@ -17,11 +17,11 @@ export async function convertToBBpfCommand(newFilePath?: string) {
         const filePath = vscode.window.activeTextEditor.document.fileName;
         newFilePath = filePath!.substring(0, filePath!.lastIndexOf('.')) + ".bbpf";
     }
-    if (fs.existsSync(newFilePath)){
+    if (fs.existsSync(newFilePath)) {
         if (await vscode.window.showWarningMessage(
             `a file in path ${newFilePath} already exists. override?`,
             'yes', 'no'
-        ) === 'no'){
+        ) === 'no') {
             return;
         }
     }
@@ -50,11 +50,11 @@ export async function convertToBpfCommand(newFilePath?: string) {
     const curDoc = vscode.window.activeTextEditor.document;
     curDoc.save();
     if (fs.existsSync(newFilePath) &&
-    fs.statSync(curDoc.uri.fsPath).mtimeMs < fs.statSync(newFilePath).mtimeMs){
+        fs.statSync(curDoc.uri.fsPath).mtimeMs < fs.statSync(newFilePath).mtimeMs) {
         if (await vscode.window.showWarningMessage(
             `${newFilePath} has changed later than ${curDoc.uri.fsPath}. override?`,
             'yes', 'no'
-        ) === 'no'){
+        ) === 'no') {
             return;
         }
     }
@@ -63,22 +63,35 @@ export async function convertToBpfCommand(newFilePath?: string) {
     await vscode.window.showTextDocument(vscode.Uri.file(newFilePath));
     await vscode.commands.executeCommand('editor.action.formatDocument');
 };
-export function minifyBbpf(bbpfString:string): string {
+export function minifyBbpf(bbpfString: string): string {
     const grammar = tryLoadGrammarSync('source.bbpf');
-    let minifiedBpf = '';
     if (grammar === null) {
         throw new Error("unexpected exception while loading bbpf grammar");
     }
-    for (const line of tokenizeCodeLines(bbpfString, grammar)) {
-        for (const token of line) {
-            if (last(token.scopes).startsWith(BPFScopes.commentPrefix)) {
-                continue;
-            }
-            minifiedBpf += token.text;
+    let lines = Array(...tokenizeCodeLines(bbpfString, grammar));
+    for (const i in lines) {
+        let startIndex = 0;
+        while ( startIndex < lines[i].length &&
+            (
+                last(lines[i][startIndex].scopes).startsWith(BPFScopes.commentPrefix) ||
+                last(lines[i][startIndex].scopes).startsWith(BPFScopes.space)
+            )) {
+            startIndex++;
         }
-        minifiedBpf += ' ';
+        let endIndex = lines[i].length;
+        while (endIndex >= startIndex &&
+            (
+                last(lines[i][endIndex - 1].scopes).startsWith(BPFScopes.commentPrefix) ||
+                last(lines[i][endIndex - 1].scopes).startsWith(BPFScopes.space)
+            )) {
+            endIndex--;
+        }
+        lines[i] = lines[i].slice(startIndex, endIndex);
     }
-    return minifiedBpf;
+    lines = lines.filter((line) => line.length > 0);
+    return lines.map((line) =>
+        line.map((token) => token.text).join('')
+    ).join(' ');
 }
 
 export async function annotatePrintableBytes() {

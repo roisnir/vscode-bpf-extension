@@ -17,7 +17,7 @@
     },
     "license": "MIT",
     "homepage": "https://github.com/roisnir/vscode-bpf-extension",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "keywords": ["bpf", "packet", "pcap", "filter"],
     "engines": {
         "vscode": "^1.59.0"

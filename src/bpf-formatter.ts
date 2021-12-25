@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { IGrammar } from 'vscode-textmate';
 import { IParenthesizedPrimitive, parseBpf, ParsingError } from './parse-bpf';
-import { tryLoadGrammarSync, tokenizeCode } from './textmate-grammer';
+import { tryLoadGrammarSync, tokenizeCode } from './textmate-grammar';
 
 
 function removeWhiteSpace(document: vscode.TextDocument): vscode.TextEdit[]{

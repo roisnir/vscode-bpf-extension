@@ -23,8 +23,8 @@ const registry = new vsctm.Registry({
         return new Promise<IRawGrammar | null>((resolve, reject) => {
             // return new Promise<IRawGrammar>((resolve, reject) => {
             if (!(scopeName in supportedScopesFiles)) {
-                console.error(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
-                // reject(`Unsupported scope name: ${scopeName}. availble scopes are ${Object.keys(supportedScopesFiles)}`);
+                console.error(`Unsupported scope name: ${scopeName}. available scopes are ${Object.keys(supportedScopesFiles)}`);
+                // reject(`Unsupported scope name: ${scopeName}. available scopes are ${Object.keys(supportedScopesFiles)}`);
                 resolve(null);
             } else {
                 const filePath = supportedScopesFiles[scopeName].toString();

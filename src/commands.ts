@@ -15,7 +15,7 @@ export async function convertToBBpfCommand(newFilePath?: string) {
     }
     if (newFilePath === undefined) {
         const filePath = vscode.window.activeTextEditor.document.fileName;
-        newFilePath = filePath!.substr(0, filePath!.lastIndexOf('.')) + ".bbpf";
+        newFilePath = filePath!.substring(0, filePath!.lastIndexOf('.')) + ".bbpf";
     }
     if (fs.existsSync(newFilePath)){
         if (await vscode.window.showWarningMessage(
@@ -32,6 +32,7 @@ export async function convertToBBpfCommand(newFilePath?: string) {
     fs.writeFileSync(newFilePath, text);
     await vscode.window.showTextDocument(vscode.Uri.file(newFilePath));
     await vscode.commands.executeCommand('editor.action.formatDocument');
+    await vscode.commands.executeCommand('bpf.annotatePrintableBytes');
 };
 
 export async function convertToBpfCommand(newFilePath?: string) {
